@@ -1,6 +1,7 @@
 package com.bdi.erp.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -26,11 +27,16 @@ public class ViewServlet extends HttpServlet {
 //	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String uri = "/WEB-INF/views/user/userList.jsp";
-		RequestDispatcher rd = request.getRequestDispatcher(uri);
-		rd.forward(request,response);
+		String uri = request.getRequestURI();
+		String rPath = request.getContextPath();
+		uri = uri.replace(rPath, "");
+		uri = "/WEB-INF" + uri + ".jsp";
+	//	String name = request.getParameter("name");
 		
-	}
+	//	request.setAttribute("name", name);
+			RequestDispatcher rd = request.getRequestDispatcher(uri);
+			rd.forward(request, response);
+	} 
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

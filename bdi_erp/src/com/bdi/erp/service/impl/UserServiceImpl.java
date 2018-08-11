@@ -13,7 +13,7 @@ public class UserServiceImpl implements UserService {
 	public boolean login(String id, String pwd) {
 		return udao.login(id,  pwd);
 	}
-	public List<Map<String,String>> getUserList(){
-		return udao.getUserList();
+	public List<Map<String,String>> getUserList(Map<String,String[]> name){
+		return udao.getUserList(name);
 	}
 }

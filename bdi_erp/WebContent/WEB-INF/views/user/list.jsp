@@ -8,6 +8,15 @@ List<Map<String,String>> userList = (List<Map<String,String>>)request.getAttribu
 %>
 <body>
 <div class="container">
+<div style="margin:10px">
+	<form action="<%=rPath%>/user/list">
+		번호 : <input type="text" name="uiNum">
+		이름 : <input type="text" name="uiName">
+		아이디 : <input type="text" name="uiId">
+		이메일 : <input type="text" name="uiEmail">
+		<button>검색</button>
+	</form>
+</div>
 	<table class="table table-bordered table-hover">
 		<tr>
 			<th>번호</th>

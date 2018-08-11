@@ -3,6 +3,7 @@ package com.bdi.erp.servlet;
 import java.io.IOException;
 
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +38,9 @@ public class UserServlet extends HttpServlet {
 		}else if(cmd.equals("join")) {
 			out.println("회원가입입니다.");
 		}else if(cmd.equals("list")) {
-			List<Map<String,String>> userList = us.getUserList();
+			Map<String, String[]> name = new HashMap<String,String[]>();
+			name = request.getParameterMap();
+			List<Map<String,String>> userList = us.getUserList(name);
 			RequestDispatcher rd = request.getRequestDispatcher("/views" + uri);
 			request.setAttribute("userlist",userList);
 			rd.forward(request, response);

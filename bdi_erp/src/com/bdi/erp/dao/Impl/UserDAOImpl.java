@@ -3,9 +3,11 @@ package com.bdi.erp.dao.Impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -39,17 +41,26 @@ public class UserDAOImpl implements UserDAO {
 		}
 		return false;
 	}
-	public List<Map<String,String>> getUserList(){
+	public List<Map<String,String>> getUserList(Map<String,String[]> name){
 			Connection con = null;
-			List<Map<String,String>> result = new ArrayList<Map<String,String>>();
+			List<Map<String,String>> userList = new ArrayList<Map<String,String>>();
 			try {
 				con = DBConnection.getCon();
-				String sql = "select * from user_info";
+				String sql = "select * from user_info where 1=1";
+				Iterator iterator = name.keySet().iterator();
+				String key = (String)iterator.next();
+				if(name.get(key)!=null && !name.get(key).equals("")) {
+					sql += " and " + key + " like ?";
+				}
 				PreparedStatement ps = con.prepareStatement(sql);
+				if(name.get(key)!=null && !name.get(key).equals("")) {
+					ps.setString(1, "%"+name.get(key)+"%");
+				}
 				ResultSet rs = ps.executeQuery();
-				
+				ResultSetMetaData rsmt = rs.getMetaData();
+				Map<String,String> user;
 				while(rs.next()) {
-					Map<String,String> subresult = new HashMap<String,String>();
+			/*		Map<String,String> subresult = new HashMap<String,String>();
 					subresult.put("uiNum", rs.getString("uiNum"));
 					subresult.put("uiName", rs.getString("uiName"));
 					subresult.put("uiId",rs.getString("uiId"));
@@ -63,8 +74,14 @@ public class UserDAOImpl implements UserDAO {
 					subresult.put("modtim",rs.getString("modtim"));
 					subresult.put("modusr",rs.getString("modusr"));
 					subresult.put("diNum",rs.getString("diNum"));
-					result.add(subresult);
-					System.out.println(result);
+					userList.add(subresult);
+					System.out.println(userList); */
+					user = new HashMap<String,String>();
+					for(int a=1;a<=rsmt.getColumnCount();a++) {
+						String colNm = rsmt.getColumnLabel(a);
+						user.put(colNm, rs.getString(colNm));
+					}
+					userList.add(user);
 				}
 			}catch (SQLException e) {
 				e.printStackTrace();
@@ -73,6 +90,6 @@ public class UserDAOImpl implements UserDAO {
 					DBConnection.closeCon();
 				}
 			}
-			return result;
+			return userList;
 	}
 }
